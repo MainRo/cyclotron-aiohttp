@@ -22,7 +22,7 @@ install_requires = [
 
 setup(
     name="cyclotron-aiohttp",
-    version='0.7.0',
+    version='1.0.0',
     url='https://github.com/MainRo/cyclotron-aiohttp.git',
     license='MIT',
     description="AioHttp drivers for cyclotron",
