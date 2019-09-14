@@ -3,8 +3,9 @@ import asyncio
 from collections import namedtuple
 from cyclotron import Component
 
-from rx import Observable
-from rx.subjects import Subject
+import rx
+import rx.operators as ops
+from rx.subject import Subject
 
 import aiohttp
 
@@ -38,7 +39,7 @@ def make_driver(loop=None):
         '''
         session = None
 
-        def on_response_subscribe(observer):
+        def on_response_subscribe(observer, scheduler):
             async def _request(request):
                 nonlocal session
 
@@ -89,7 +90,7 @@ def make_driver(loop=None):
                 on_error=on_request_error)
 
         return Source(
-            response=Observable.create(on_response_subscribe)
+            response=rx.create(on_response_subscribe)
         )
 
     return Component(call=driver, input=Sink)
@@ -106,12 +107,11 @@ def client(sources):
     http_request = Subject()
 
     def request(method, url, **kwargs):
-        def on_subscribe(observer):
-            response = (
-                sources.http_response
-                .filter(lambda i: i.id is response_observable)
-                .take(1)
-                .flat_map(lambda i: i.response)
+        def on_subscribe(observer, scheduler):
+            response = sources.http_response.pipe(
+                ops.filter(lambda i: i.id is response_observable),
+                ops.take(1),
+                ops.flat_map(lambda i: i.response),
             )
 
             dispose = response.subscribe(observer)
@@ -124,7 +124,7 @@ def client(sources):
 
             return dispose
 
-        response_observable = Observable.create(on_subscribe)
+        response_observable = rx.create(on_subscribe)
         return response_observable
 
     return Client(

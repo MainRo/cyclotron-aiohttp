@@ -5,8 +5,9 @@ import asyncio
 from collections import namedtuple
 from cyclotron import Component
 
-from rx import Observable
-from rx.concurrency import AsyncIOScheduler
+import rx
+import rx.operators as ops
+from rx.scheduler.eventloop import AsyncIOScheduler
 
 from aiohttp import web
 from aiohttp import helpers
@@ -64,7 +65,7 @@ def make_driver(loop=None):
         def add_route(app, methods, path, id, headers=None):
             request_observer = None
 
-            def on_request_subscribe(observer):
+            def on_request_subscribe(observer, scheduler):
                 nonlocal request_observer
                 request_observer = observer
 
@@ -98,23 +99,23 @@ def make_driver(loop=None):
                 route = RouteAdded(
                     path=path,
                     id=id,
-                    request=Observable.create(on_request_subscribe)
+                    request=rx.create(on_request_subscribe)
                 )
                 route_observer.on_next(route)
 
         def create_server_observable():
-            def on_server_subscribe(observer):
+            def on_server_subscribe(observer, scheduler):
                 nonlocal server_observer
                 server_observer = observer
 
-            return Observable.create(on_server_subscribe)
+            return rx.create(on_server_subscribe)
 
         def create_route_observable():
-            def on_route_subscribe(observer):
+            def on_route_subscribe(observer, scheduler):
                 nonlocal route_observer
                 route_observer = observer
 
-            return Observable.create(on_route_subscribe).share()
+            return rx.create(on_route_subscribe).pipe(ops.share())
 
         def start_server(host, port, app):
             runner = web.AppRunner(app)

@@ -3,9 +3,10 @@ import threading
 from unittest import TestCase
 import urllib.request
 
-from rx import Observable
-from rx.subjects import Subject
-import cyclotron_aio.httpd as httpd
+import rx
+import rx.operators as ops
+from rx.subject import Subject
+import cyclotron_aiohttp.httpd as httpd
 
 
 class HttpdServerTestCase(TestCase):
@@ -80,7 +81,7 @@ class HttpdServerTestCase(TestCase):
         for index,route in enumerate(actual_routes):
             self.assertEqual(routes[index].path, route.path)
             self.assertEqual(routes[index].id, route.id)
-            self.assertIsInstance(route.request, Observable)
+            self.assertIsInstance(route.request, rx.Observable)
 
     def test_get(self):
         client_thread = None
@@ -118,10 +119,10 @@ class HttpdServerTestCase(TestCase):
 
         loop.call_soon(setup, sink)
         source = httpd.make_driver(loop).call(sink)
-        source.route \
-            .filter(lambda i : i.id == 'foo') \
-            .flat_map(lambda i: i.request) \
-            .subscribe(on_route_item)
+        source.route.pipe(
+            ops.filter(lambda i : i.id == 'foo'),
+            ops.flat_map(lambda i: i.request),
+        ).subscribe(on_route_item)
 
         source.server \
             .subscribe(on_server_item)

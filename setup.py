@@ -13,19 +13,19 @@ except IOError:
     # maybe running setup.py from some other dir
     description = ''
 
-python_requires='>=3.5'
+python_requires = '>=3.6'
 install_requires = [
-    'rx>=1.6',
-    'cyclotron>=0.4',
+    'rx>=3.0',
+    'cyclotron>=1.0',
     'aiohttp>=3.0',
 ]
 
 setup(
-    name="cyclotron-aio",
+    name="cyclotron-aiohttp",
     version='0.7.0',
-    url='https://github.com/MainRo/cyclotron-aio.git',
+    url='https://github.com/MainRo/cyclotron-aiohttp.git',
     license='MIT',
-    description="Asynchronous IO drivers for cyclotron",
+    description="AioHttp drivers for cyclotron",
     long_description=description,
     author='Romain Picard',
     author_email='romain.picard@oakbits.com',

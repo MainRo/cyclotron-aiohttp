@@ -1,14 +1,40 @@
-language: python
-python:
-- '3.5'
+matrix:
+  include:
+
+    - os: linux
+      dist: xenial
+      language: python
+      python: '3.6'
+      deploy:
+          provider: pypi
+          distributions: sdist
+          user: mainro
+          password:
+              secure: "hVfpoOKXAEPmYyZUU7ruMgjR5d7lIGssgWHWAWgYOCE0TdSB8V4DcbiO1d+U9z0FO0OAt9bb/PwRnLVklCXbH9DRuwXDDh1YdFZ4GarXFn42fkIntWQQKdZb4sQ8XEbiZzR4E5hUYqxgOGwL2BZTPqziVI6so78hiWi6zTMCZnKRPLwhiN/Jpky1F4bVszerKnyBRkcpWvsXXABfSNkh9nMT1GxIhSgTyeJf2gYG0+ivyXaQOnJQq1Xau2bDM8dXCe5Wnm4NCG3bA4KmGeqREDVPW9zDYcTg591Wf9hXGLHSFsghHP+EEfeH6A1dE/nhVaDqiLvv0dYmvjbKLTsXDdOItD6SeVLahY6mVa2cxlGED4vjyEbnjD/g4EjrXEavav6Xr+GN9dAjk+NmspS9aob9A/Fbox3kHB5Mzdz/jBmZwoGpZnRU/uAQQE10KJmR0uWqik4sqGuExE62qsBwMVk5KO0FyovdslLIC5OTLlxH6SEwO1RIZJVLvOqoAz1hKiveY+we/Cwe4Kw8Oz0Zb5hgP4s+wdoyOcT7MT4Ff4+u+jtlA4SpJAiJQQGBEQc/4TJVSGutaSoXM5yThN/6OZvqx1ueNzmhmgUakzI9mcLdMhSpINdmWcHz3pI/9XDsRFqMFPTEBzVYrMLHP/MYHfGn5472JWWKNNSaNyNy93M="
+          on:
+              tags: true
+
+    - os: linux
+      dist: xenial
+      language: python
+      python: '3.7'
+
+    - os: linux
+      dist: xenial
+      language: python
+      python: '3.8-dev'
+
+    - os: windows
+      language: sh
+      python: '3.7'
+      before_install:
+        - choco install python3
+        - ln -s "/c/Python37/python.exe" "/c/Python37/python3.exe"
+        - export PATH="/c/Python37:/c/Python37/Scripts/:$PATH"
+
 install:
-- pip install nose
-- pip install -r requirements.txt
+  - pip install nose
+  - pip install -r requirements.txt
 script: nosetests -s --verbosity=3
-deploy:
-  provider: pypi
-  user: mainro
-  password:
-    secure: eJMV8WJj053Tr08lWPg9cEjoDfU4xF0qgPXDPMlnjl2QPvGmt2VGXGWT0E8q3DBWd0gIEIY8NNkW4Px6nrXfSPPYM4yNZx5SXGdnv3SeNQ2rySshXW+Il6u8vF7jh8Am/OofnJZs7oBou/+ssXVgQ1Tc1OY3VRZnYCl7cIIwR2tEasDfr2h26R/EENb/ct6ODBG/o84SEMf2XSaGWg0W1RtChJWWYJ/xjmjoH1E9b8CxBgoyJ4E+7opL7jc9g4P3b06B/w49okWBhoPzrOza5AwqKlVdrbgs8bxL0AEN0uU3bTGSqWqWWfo8EA04sgYoSqkj8RXyMcUu+ZsXf5UMQMvbpMXl1TviARJx1QXPqPTJjXnrHcOZr/W0+1cd2hYuIDIZ3hsk8x8KKg7bwHz7rQXrmf+XJq+XrfewqrIet3GXytyTOTQ0heUkc2Ajp7dH8VLo87ox9bgmAe4jK4g7WsDweW2UUVtxcGYs33a/WdcKq9EyUCoawKKmy7oMvq8YAmq+k+PWpbk92BczVoueDsvDD4cKKw8NPPOqK1eS2muHOPrDbFFPR1v920QmSx3sC2s3SuuWW6szY+liDg4/bnaC7K7IP9UGEJWWJLqVb/4sgbh5bLTlGK9uPxz6bBM5qi9jDprCf6vykxGi4Q6tv5mW7BMey1iR0aGpAGmLvNI=
-  on:
-    tags: true
+
+

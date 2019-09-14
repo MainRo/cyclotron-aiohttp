@@ -2,9 +2,9 @@ from collections import namedtuple
 import functools
 from unittest import TestCase
 
-from rx import Observable
-from rx.subjects import Subject
-import cyclotron_aio.http as http
+import rx
+from rx.subject import Subject
+import cyclotron_aiohttp.http as http
 
 class HttpClientTestCase(TestCase):
     def setUp(self):
@@ -62,7 +62,7 @@ class HttpClientTestCase(TestCase):
         )
         http_response.on_next(http.Response(
             id=response,
-            response=Observable.just(result)
+            response=rx.just(result)
         ))
 
         self.assertIs(
