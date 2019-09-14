@@ -1,9 +1,10 @@
 from collections import namedtuple
 
 from cyclotron import Component
-from cyclotron_aio.runner import run
-import cyclotron_aio.httpd as httpd
-from rx import Observable
+from cyclotron.asyncio.runner import run
+import cyclotron_aiohttp.httpd as httpd
+import rx
+import rx.operators as ops
 
 EchoSource = namedtuple('EchoSource', ['httpd'])
 EchoSink = namedtuple('EchoSink', ['httpd'])
@@ -11,19 +12,20 @@ EchoDrivers = namedtuple('EchoDrivers', ['httpd'])
 
 
 def echo_server(source):
-    init = Observable.from_([
+    init = rx.from_([
         httpd.Initialize(),
         httpd.AddRoute(methods=['GET'], path='/echo/{what}', id='echo'),
         httpd.StartServer(host='localhost', port=8080),
     ])
 
-    echo = source.httpd.route           \
-        .flat_map(lambda i: i.request)  \
-        .map(lambda i: httpd.Response(
+    echo = source.httpd.route.pipe(
+        ops.flat_map(lambda i: i.request),
+        ops.map(lambda i: httpd.Response(
             context=i.context,
-            data=i.match_info['what'].encode('utf-8')))
+            data=i.match_info['what'].encode('utf-8'))),
+    )
 
-    control = Observable.merge(init, echo)
+    control = rx.merge(init, echo)
     return EchoSink(httpd=httpd.Sink(control=control))
 
 
