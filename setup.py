@@ -17,7 +17,7 @@ python_requires = '>=3.6'
 install_requires = [
     'rx>=3.0',
     'cyclotron>=1.0',
-    'aiohttp>=3.0',
+    'aiohttp>=3.0,<4.0',
 ]
 
 setup(
