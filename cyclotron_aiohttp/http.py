@@ -60,7 +60,7 @@ def make_driver(loop=None):
                     data = await response.read()
                     observer.on_next(Response(
                         id=request.id,
-                        response=Observable.just(HttpResponse(
+                        response=rx.just(HttpResponse(
                             status=response.status, reason=response.status,
                             method=response.method, url=response.url,
                             data=data, cookies=response.cookies,
@@ -70,10 +70,11 @@ def make_driver(loop=None):
                     ))
 
                 except Exception as e:
-                    print("exception: {}".format(e))
+                    #print("exception: {}, {}".format(e, traceback.format_exc()))
                     observer.on_next(Response(
                         id=request.id,
-                        response=Observable.throw(e)))
+                        response=rx.throw(e)))
+                    pass
 
             def on_request_item(i):
                 if type(i) is Request:
