@@ -5,9 +5,9 @@ import asyncio
 from collections import namedtuple
 from cyclotron import Component
 
-import rx
-import rx.operators as ops
-from rx.scheduler.eventloop import AsyncIOScheduler
+import reactivex as rx
+import reactivex.operators as ops
+from reactivex.scheduler.eventloop import AsyncIOScheduler
 
 from aiohttp import web
 from aiohttp import helpers

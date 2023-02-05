@@ -3,9 +3,9 @@ import asyncio
 from collections import namedtuple
 from cyclotron import Component
 
-import rx
-import rx.operators as ops
-from rx.subject import Subject
+import reactivex as rx
+import reactivex.operators as ops
+from reactivex.subject import Subject
 
 import aiohttp
 

@@ -3,8 +3,8 @@ from collections import namedtuple
 from cyclotron import Component
 from cyclotron.asyncio.runner import run
 import cyclotron_aiohttp.httpd as httpd
-import rx
-import rx.operators as ops
+import reactivex as rx
+import reactivex.operators as ops
 
 EchoSource = namedtuple('EchoSource', ['httpd'])
 EchoSink = namedtuple('EchoSink', ['httpd'])

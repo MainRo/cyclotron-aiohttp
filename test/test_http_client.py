@@ -2,8 +2,8 @@ from collections import namedtuple
 import functools
 from unittest import TestCase
 
-import rx
-from rx.subject import Subject
+import reactivex as rx
+from reactivex.subject import Subject
 import cyclotron_aiohttp.http as http
 
 class HttpClientTestCase(TestCase):
